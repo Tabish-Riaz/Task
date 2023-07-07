@@ -14,7 +14,6 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/signup_images.png'),
             Text(
               "Hello! 👋",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

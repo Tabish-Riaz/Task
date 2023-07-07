@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
 
   String? _validateEmail(String? value) {
     if (value!.isEmpty) {
@@ -46,6 +47,10 @@ class _LoginPageState extends State<LoginPage> {
       return 'Password is required';
     }
 
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+
     return null;
   }
 
@@ -53,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Home()),
@@ -66,16 +72,22 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login Page')),
-      body: Column(
-        children: [
-          Image.asset('assets/images/signup_images.png'),
-          SizedBox(
-            height: 20.4,
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 80.0,
+            ),
+            Image.asset(
+              'assets/images/signup_images.png',
+              width: 150,
+              height: 150,
+            ),
+            SizedBox(
+              height: 50.4,
+            ),
+            Padding(
+              padding: EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -89,9 +101,23 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 16.0),
                     TextFormField(
                       controller: passwordController,
-                      decoration: InputDecoration(labelText: 'Password'),
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                      ),
                       validator: _validatePassword,
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -101,7 +127,8 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignupPage()),
+                                builder: (context) => SignupPage(),
+                              ),
                             );
                           },
                           child: Text('Create an account'),
@@ -116,8 +143,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
